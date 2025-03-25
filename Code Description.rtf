@@ -1,0 +1,155 @@
+{\rtf1\ansi\ansicpg1252\deff0\nouicompat\deflang1033{\fonttbl{\f0\fnil\fcharset0 Calibri;}}
+{\colortbl ;\red255\green0\blue0;}
+{\*\generator Riched20 10.0.22621}\viewkind4\uc1 
+\pard\sa200\sl276\slmult1\qc\b\f0\fs32\lang9 RATINOPATHY\par
+\par
+\b0\fs28 Step 1: Importing Libraries\fs22\par
+
+\pard\sa200\sl276\slmult1 ________________________________________________________________________\par
+\cf1 import tensorflow as tf\par
+from tensorflow.keras import layers, models\par
+import numpy as np\par
+import matplotlib.pyplot as plt\par
+from sklearn.model_selection import train_test_split\par
+\cf0 ________________________________________________________________________\par
+\b TensorFlow: \b0 This is a deep learning library that helps build and train machine learning models.\par
+\b NumPy: \b0 This library is used for numerical operations, such as creating and manipulating arrays.\par
+\b Matplotlib: \b0 This library is used for plotting and visualizing data.\par
+\b Scikit-learn (sklearn): \b0 This library is used for various machine learning tasks, including data splitting.\par
+\par
+
+\pard\sa200\sl276\slmult1\qc\b\fs28 Step 2: Data Preparation\b0\fs22\par
+
+\pard\sa200\sl276\slmult1 ________________________________________________________________________\par
+\cf1 # Assume X contains the retinal image data and y contains the labels\par
+# X should be a numpy array of shape (num_samples, height, width, channels)\par
+# y should be a numpy array of shape (num_samples, 1)\par
+\par
+# For example, load data (replace this with actual data loading)\par
+# X, y = load_your_retinopathy_dataset()\par
+\par
+# For demonstration purposes, let's create dummy data\par
+num_samples = 1000\par
+height, width, channels = 128, 128, 3  # Assuming RGB images\par
+X = np.random.rand(num_samples, height, width, channels)\par
+y = np.random.randint(0, 2, (num_samples, 1))  # Binary labels: 0 (No retinopathy), 1 (Retinopathy)\par
+\cf0 ________________________________________________________________________\par
+\b X: \b0 This variable represents the dataset of retinal images. Each image has a height and width of 128 pixels and 3 color channels (RGB).\par
+\b y: \b0 This variable represents the labels for each image, indicating whether the image shows signs of diabetic retinopathy (1) or not (0).\par
+\b Dummy Data: \b0 For demonstration purposes, we create random dummy data. In a real scenario, you would load actual data from a dataset.\par
+\par
+
+\pard\sa200\sl276\slmult1\qc\b\fs28 Step 3: Splitting Data\b0\fs22\par
+
+\pard\sa200\sl276\slmult1 ________________________________________________________________________\par
+\cf1 # Split the data into training and testing sets\par
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)\par
+\cf0 ________________________________________________________________________\par
+\b train_test_split: \b0 This function splits the dataset into training and testing sets. test_size=0.2 means 20% of the data will be used for testing, and the remaining 80% will be used for training.\par
+\b X_train, y_train: \b0 Training data and labels.\par
+\b X_test, y_test: \b0 Testing data and labels.\par
+\par
+
+\pard\sa200\sl276\slmult1\qc\b\fs28 Step 4: Defining the CNN Model\b0\fs22\par
+
+\pard\sa200\sl276\slmult1 ________________________________________________________________________\par
+\cf1 # Define the CNN model\par
+model = models.Sequential([\par
+    layers.Conv2D(32, (3, 3), activation='relu', input_shape=(height, width, channels)),\par
+    layers.MaxPooling2D((2, 2)),\par
+    layers.Conv2D(64, (3, 3), activation='relu'),\par
+    layers.MaxPooling2D((2, 2)),\par
+    layers.Conv2D(128, (3, 3), activation='relu'),\par
+    layers.MaxPooling2D((2, 2)),\par
+    layers.Flatten(),\par
+    layers.Dense(128, activation='relu'),\par
+    layers.Dense(1, activation='sigmoid')  # Binary classification\par
+])\par
+\cf0 ________________________________________________________________________\par
+\b Sequential: \b0 A linear stack of layers where you can add layers sequentially.\par
+\b Conv2D layers: \b0 Convolutional layers that apply filters to the input image to extract features.\par
+\b 32, 64, 128: \b0 Number of filters in the layer.\par
+\b (3, 3): \b0 Size of the filters (3x3 pixels).\par
+\b activation='relu': \b0 ReLU activation function introduces non-linearity.\par
+\b input_shape=(height, width, channels): \b0 Shape of the input images.\par
+\b MaxPooling2D layers: \b0 Down-sample the spatial dimensions (reduce image size) by taking the maximum value in each 2x2 block.\par
+\b Flatten: \b0 Flattens the 2D output of the convolutional layers into a 1D vector.\par
+\b Dense layers: \b0 Fully connected layers.\par
+\b 128: \b0 Number of neurons in the hidden layer.\par
+\b activation='relu': \b0 ReLU activation function.\b\par
+1: \b0 Single neuron in the output layer for binary classification.\par
+\b activation='sigmoid': \b0 Sigmoid activation function for binary classification.\par
+
+\pard\sa200\sl276\slmult1\qc\b\fs28\par
+Step 5: Compiling the Model\par
+
+\pard\sa200\sl276\slmult1\b0\fs22 ________________________________________________________________________# \cf1 Compile the model\par
+model.compile(optimizer='adam',\par
+              loss='binary_crossentropy',\par
+              metrics=['accuracy'])\par
+\cf0 ________________________________________________________________________\par
+\b compile: \b0 Configures the model for training.\par
+\b optimizer='adam': \b0 Adam optimizer, which adjusts the learning rate during training.\par
+\b loss='binary_crossentropy': \b0 Loss function for binary classification problems.\par
+\b metrics=['accuracy']: \b0 Metric to evaluate the model during training and testing.\par
+\par
+
+\pard\sa200\sl276\slmult1\qc\b\fs28 Step 6: Training the Model\b0\fs22\par
+
+\pard\sa200\sl276\slmult1 ________________________________________________________________________\par
+\cf1 # Train the model\par
+history = model.fit(X_train, y_train, epochs=10, batch_size=32, validation_split=0.2)\par
+\cf0 ________________________________________________________________________\cf1\par
+\cf0\b fit: \b0 Trains the model on the training data.\par
+\b X_train, y_train: \b0 Training data and labels.\par
+\b epochs=10: \b0 Number of times the model will go through the entire training dataset.\par
+\b batch_size=32: \b0 Number of samples per gradient update.\par
+\b validation_split=0.2: \b0 20% of the training data is used for validation.\par
+
+\pard\sa200\sl276\slmult1\qc\b\fs28\par
+Step 7: Evaluating the Model\par
+
+\pard\sa200\sl276\slmult1\b0\fs22 ________________________________________________________________________# \cf1 Evaluate the model on the test set\par
+test_loss, test_acc = model.evaluate(X_test, y_test, verbose=2)\par
+print(f'\\nTest accuracy: \{test_acc\}')\par
+\cf0 ________________________________________________________________________\par
+\b evaluate: \b0 Evaluates the model on the test data.\par
+\b X_test, y_test: \b0 Testing data and labels.\par
+\b verbose=2: \b0 Controls the verbosity of the output.\par
+Prints the test accuracy.\par
+\par
+
+\pard\sa200\sl276\slmult1\qc\b\fs28 Step 8: Plotting Training History\b0\fs22\par
+
+\pard\sa200\sl276\slmult1 ________________________________________________________________________\par
+\cf1 # Plot training & validation accuracy and loss values\par
+plt.figure(figsize=(12, 4))\par
+plt.subplot(1, 2, 1)\par
+plt.plot(history.history['accuracy'], label='Train Accuracy')\par
+plt.plot(history.history['val_accuracy'], label='Validation Accuracy')\par
+plt.title('Model Accuracy')\par
+plt.xlabel('Epoch')\par
+plt.ylabel('Accuracy')\par
+plt.legend()\par
+\par
+plt.subplot(1, 2, 2)\par
+plt.plot(history.history['loss'], label='Train Loss')\par
+plt.plot(history.history['val_loss'], label='Validation Loss')\par
+plt.title('Model Loss')\par
+plt.xlabel('Epoch')\par
+plt.ylabel('Loss')\par
+plt.legend()\par
+\par
+plt.show()\par
+\cf0 ________________________________________________________________________\par
+\b Plotting: \b0 Creates plots to visualize the training process.\par
+\b Accuracy plot: \b0 Shows the training and validation accuracy over epochs.\par
+\b Loss plot: \b0 Shows the training and validation loss over epochs.\par
+\b history.history: \b0 Contains the accuracy and loss values recorded during training.\par
+\par
+
+\pard\sa200\sl276\slmult1\qc\b\fs28 Summary\b0\fs22\par
+
+\pard\sa200\sl276\slmult1 This code demonstrates how to create and train a convolutional neural network (CNN) for detecting diabetic retinopathy from retinal images. It includes data preparation, model definition, training, evaluation, and visualization of the training process. In a real-world scenario, you would use an actual dataset of retinal images with labels for diabetic retinopathy and possibly perform additional preprocessing and data augmentation steps to improve the model's performance.\par
+}
+ 
